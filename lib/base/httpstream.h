@@ -7,7 +7,7 @@
 #include <lib/base/socketbase.h>
 #include <lib/base/thread.h>
 
-class eHttpStream: public iTsSource, public eSocketBase, public Object, public eThread
+class eHttpStream: public iTsSource, public eSocketBase, public sigc::trackable, public eThread
 {
 	DECLARE_REF(eHttpStream);
 
