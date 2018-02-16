@@ -17,9 +17,9 @@ eDVBRdsDecoder::eDVBRdsDecoder(iDVBDemux *demux, int type)
 	if (demux->createPESReader(eApp, m_pes_reader))
 		eDebug("failed to create PES reader!");
 	else if (type == 0)
-		m_pes_reader->connectRead(slot(*this, &eDVBRdsDecoder::processData), m_read_connection);
+		m_pes_reader->connectRead(sigc::mem_fun(*this, &eDVBRdsDecoder::processData), m_read_connection);
 	else
-		m_pes_reader->connectRead(slot(*this, &eDVBRdsDecoder::gotAncillaryData), m_read_connection);
+		m_pes_reader->connectRead(sigc::mem_fun(*this, &eDVBRdsDecoder::gotAncillaryData), m_read_connection);
 	CONNECT(m_abortTimer->timeout, eDVBRdsDecoder::abortNonAvail);
 }
 
@@ -94,7 +94,7 @@ static int frequency[3][4] = {
 	{ 11025,12000,8000,0 }
 };
 
-void eDVBRdsDecoder::connectEvent(const Slot1<void, int> &slot, ePtr<eConnection> &connection)
+void eDVBRdsDecoder::connectEvent(const sigc::slot1<void, int> &slot, ePtr<eConnection> &connection)
 {
 	connection = new eConnection(this, m_event.connect(slot));
 }
@@ -407,13 +407,13 @@ void eDVBRdsDecoder::gotAncillaryData(const __u8 *buf, int len)
 					switch (c)
 					{
 						case 0 ... 0x7f: break;
-						case 0x8d: c='ß'; break;
-						case 0x91: c='ä'; break;
-						case 0xd1: c='Ä'; break;
-						case 0x97: c='ö'; break;
-						case 0xd7: c='Ö'; break;
-						case 0x99: c='ü'; break;
-						case 0xd9: c='Ü'; break;
+						case 0x8d: c='ÃŸ'; break;
+						case 0x91: c='Ã¤'; break;
+						case 0xd1: c='Ã„'; break;
+						case 0x97: c='Ã¶'; break;
+						case 0xd7: c='Ã–'; break;
+						case 0x99: c='Ã¼'; break;
+						case 0xd9: c='Ãœ'; break;
 						default: c=' '; break;  // convert all unknown to space
 					}
 					message[msgPtr++]=c;
