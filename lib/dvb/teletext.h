@@ -33,7 +33,7 @@ struct eDVBTeletextSubtitlePage
 	void clear() { m_elements.clear(); }
 };
 
-class eDVBTeletextParser: public iObject, public ePESParser, public Object
+class eDVBTeletextParser: public iObject, public ePESParser, public sigc::trackable
 {
 	DECLARE_REF(eDVBTeletextParser);
 public:
@@ -42,7 +42,7 @@ public:
 	int start(int pid);
 	void setPageAndMagazine(int page, int magazine);
 	void setMagazine(int magazine);
-	void connectNewPage(const Slot1<void,const eDVBTeletextSubtitlePage &> &slot, ePtr<eConnection> &connection);
+	void connectNewPage(const sigc::slot1<void,const eDVBTeletextSubtitlePage &> &slot, ePtr<eConnection> &connection);
 	std::set<eDVBServicePMTHandler::subtitleStream> m_found_subtitle_pages;
 private:
 	std::map<int, unsigned int> m_modifications;
@@ -69,7 +69,7 @@ private:
 	
 	void sendSubtitlePage();
 	
-	Signal1<void,const eDVBTeletextSubtitlePage&> m_new_subtitle_page;
+	sigc::signal1<void,const eDVBTeletextSubtitlePage&> m_new_subtitle_page;
 };
 
 #endif
