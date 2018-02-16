@@ -8,21 +8,21 @@
 #include <set>
 #include <lib/dvb/fcc.h>
 
-class eNavigation: public iObject, public Object
+class eNavigation: public iObject, public sigc::trackable
 {
 	DECLARE_REF(eNavigation);
 	int m_decoder;
 	ePtr<iServiceHandler> m_servicehandler;
 
 	ePtr<iPlayableService> m_runningService;
-	Signal1<void,int> m_event;
+	sigc::signal1<void,int> m_event;
 	ePtr<eConnection> m_service_event_conn;
 	void serviceEvent(iPlayableService* service, int event);
 
 	std::map<ePtr<iRecordableService>, ePtr<eConnection>, std::less<iRecordableService*> > m_recordings;
 	std::set<ePtr<iRecordableService>, std::less<iRecordableService*> > m_simulate_recordings;
 
-	Signal2<void,ePtr<iRecordableService>,int> m_record_event;
+	sigc::signal2<void,ePtr<iRecordableService>,int> m_record_event;
 	void recordEvent(iRecordableService* service, int event);
 
 	friend class eFCCServiceManager;
@@ -31,9 +31,9 @@ class eNavigation: public iObject, public Object
 public:
 	
 	RESULT playService(const eServiceReference &service);
-	RESULT connectEvent(const Slot1<void,int> &event, ePtr<eConnection> &connection);
-	RESULT connectRecordEvent(const Slot2<void,ePtr<iRecordableService>,int> &event, ePtr<eConnection> &connection);
-/*	int connectServiceEvent(const Slot1<void,iPlayableService*,int> &event, ePtr<eConnection> &connection); */
+	RESULT connectEvent(const sigc::slot1<void,int> &event, ePtr<eConnection> &connection);
+	RESULT connectRecordEvent(const sigc::slot2<void,ePtr<iRecordableService>,int> &event, ePtr<eConnection> &connection);
+/*	int connectServiceEvent(const sigc::slot1<void,iPlayableService*,int> &event, ePtr<eConnection> &connection); */
 	RESULT getCurrentService(ePtr<iPlayableService> &service);
 	RESULT stopService(void);
 	
