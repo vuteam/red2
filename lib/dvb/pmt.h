@@ -192,7 +192,7 @@ public:
 		eventNoDiskSpace,  // no disk space available
 	};
 #ifndef SWIG
-	Signal1<void,int> serviceEvent;
+	sigc::signal1<void,int> serviceEvent;
 
 	struct videoStream
 	{
