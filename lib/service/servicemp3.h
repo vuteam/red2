@@ -51,14 +51,14 @@ typedef enum { ctNone, ctMPEGTS, ctMPEGPS, ctMKV, ctAVI, ctMP4, ctVCD, ctCDA } c
 
 class eServiceMP3: public iPlayableService, public iPauseableService,
 	public iServiceInformation, public iSeekableService, public iAudioTrackSelection, public iAudioChannelSelection, 
-	public iSubtitleOutput, public iStreamedService, public iAudioDelay, public Object
+	public iSubtitleOutput, public iStreamedService, public iAudioDelay, public sigc::trackable
 {
 	DECLARE_REF(eServiceMP3);
 public:
 	virtual ~eServiceMP3();
 
 		// iPlayableService
-	RESULT connectEvent(const Slot2<void,iPlayableService*,int> &event, ePtr<eConnection> &connection);
+	RESULT connectEvent(const sigc::slot2<void,iPlayableService*,int> &event, ePtr<eConnection> &connection);
 	RESULT start();
 	RESULT stop();
 	RESULT setTarget(int target);
@@ -196,7 +196,7 @@ private:
 	bufferInfo m_bufferInfo;
 	errorInfo m_errorInfo;
 	eServiceMP3(eServiceReference ref);
-	Signal2<void,iPlayableService*,int> m_event;
+	sigc::signal2<void,iPlayableService*,int> m_event;
 	enum
 	{
 		stIdle, stRunning, stStopped,
