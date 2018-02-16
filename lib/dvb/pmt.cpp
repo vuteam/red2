@@ -1192,20 +1192,20 @@ int eDVBServicePMTHandler::tuneExt(eServiceReferenceDVB &ref, int use_decode_dem
 		if (m_channel)
 		{
 			m_channel->connectStateChange(
-				slot(*this, &eDVBServicePMTHandler::channelStateChanged), 
+				sigc::mem_fun(*this, &eDVBServicePMTHandler::channelStateChanged), 
 				m_channelStateChanged_connection);
 			m_last_channel_state = -1;
 			channelStateChanged(m_channel);
 	
 			m_channel->connectEvent(
-				slot(*this, &eDVBServicePMTHandler::channelEvent), 
+				sigc::mem_fun(*this, &eDVBServicePMTHandler::channelEvent), 
 				m_channelEvent_connection);
 
 			if (ref.path.empty())
 			{
 				m_dvb_scan = 0;
 				m_dvb_scan = new eDVBScan(m_channel, true, false);
-				m_dvb_scan->connectEvent(slot(*this, &eDVBServicePMTHandler::SDTScanEvent), m_scan_event_connection);
+				m_dvb_scan->connectEvent(sigc::mem_fun(*this, &eDVBServicePMTHandler::SDTScanEvent), m_scan_event_connection);
 			}
 		} else
 		{
