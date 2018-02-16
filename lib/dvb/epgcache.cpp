@@ -226,7 +226,7 @@ eEPGCache::eEPGCache()
 	if (!res_mgr)
 		eDebug("[eEPGCache] no resource manager !!!!!!!");
 	else
-		res_mgr->connectChannelAdded(slot(*this,&eEPGCache::DVBChannelAdded), m_chanAddedConn);
+		res_mgr->connectChannelAdded(sigc::mem_fun(*this,&eEPGCache::DVBChannelAdded), m_chanAddedConn);
 
 	instance=this;
 	memset(m_filename, 0, sizeof(m_filename));
@@ -286,7 +286,7 @@ void eEPGCache::DVBChannelAdded(eDVBChannel *chan)
 #endif
 		singleLock s(channel_map_lock);
 		m_knownChannels.insert( std::pair<iDVBChannel*, channel_data* >(chan, data) );
-		chan->connectStateChange(slot(*this, &eEPGCache::DVBChannelStateChanged), data->m_stateChangedConn);
+		chan->connectStateChange(sigc::mem_fun(*this, &eEPGCache::DVBChannelStateChanged), data->m_stateChangedConn);
 	}
 }
 
@@ -1249,7 +1249,7 @@ void eEPGCache::channel_data::startEPG()
 	mask.pid = 0xD3;
 	mask.data[0] = 0x91;
 	mask.mask[0] = 0xFF;
-	m_MHWReader->connectRead(slot(*this, &eEPGCache::channel_data::readMHWData), m_MHWConn);
+	m_MHWReader->connectRead(sigc::mem_fun(*this, &eEPGCache::channel_data::readMHWData), m_MHWConn);
 	m_MHWReader->start(mask);
 	isRunning |= MHW;
 	memcpy(&m_MHWFilterMask, &mask, sizeof(eDVBSectionFilterMask));
@@ -1259,7 +1259,7 @@ void eEPGCache::channel_data::startEPG()
 	mask.mask[0] = 0xFF;
 	mask.data[1] = 0;
 	mask.mask[1] = 0xFF;
-	m_MHWReader2->connectRead(slot(*this, &eEPGCache::channel_data::readMHWData2), m_MHWConn2);
+	m_MHWReader2->connectRead(sigc::mem_fun(*this, &eEPGCache::channel_data::readMHWData2), m_MHWConn2);
 	m_MHWReader2->start(mask);
 	isRunning |= MHW;
 	memcpy(&m_MHWFilterMask2, &mask, sizeof(eDVBSectionFilterMask));
@@ -1273,18 +1273,18 @@ void eEPGCache::channel_data::startEPG()
 
 	mask.data[0] = 0x4E;
 	mask.mask[0] = 0xFE;
-	m_NowNextReader->connectRead(slot(*this, &eEPGCache::channel_data::readData), m_NowNextConn);
+	m_NowNextReader->connectRead(sigc::mem_fun(*this, &eEPGCache::channel_data::readData), m_NowNextConn);
 	m_NowNextReader->start(mask);
 	isRunning |= NOWNEXT;
 
 	mask.data[0] = 0x50;
 	mask.mask[0] = 0xF0;
-	m_ScheduleReader->connectRead(slot(*this, &eEPGCache::channel_data::readData), m_ScheduleConn);
+	m_ScheduleReader->connectRead(sigc::mem_fun(*this, &eEPGCache::channel_data::readData), m_ScheduleConn);
 	m_ScheduleReader->start(mask);
 	isRunning |= SCHEDULE;
 
 	mask.data[0] = 0x60;
-	m_ScheduleOtherReader->connectRead(slot(*this, &eEPGCache::channel_data::readData), m_ScheduleOtherConn);
+	m_ScheduleOtherReader->connectRead(sigc::mem_fun(*this, &eEPGCache::channel_data::readData), m_ScheduleOtherConn);
 	m_ScheduleOtherReader->start(mask);
 	isRunning |= SCHEDULE_OTHER;
 
@@ -1292,7 +1292,7 @@ void eEPGCache::channel_data::startEPG()
 
 	mask.data[0] = 0x40;
 	mask.mask[0] = 0x40;
-	m_ViasatReader->connectRead(slot(*this, &eEPGCache::channel_data::readDataViasat), m_ViasatConn);
+	m_ViasatReader->connectRead(sigc::mem_fun(*this, &eEPGCache::channel_data::readDataViasat), m_ViasatConn);
 	m_ViasatReader->start(mask);
 	isRunning |= VIASAT;
 
@@ -2869,7 +2869,7 @@ void eEPGCache::channel_data::startPrivateReader()
 	}
 	seenPrivateSections.clear();
 	if (!m_PrivateConn)
-		m_PrivateReader->connectRead(slot(*this, &eEPGCache::channel_data::readPrivateData), m_PrivateConn);
+		m_PrivateReader->connectRead(sigc::mem_fun(*this, &eEPGCache::channel_data::readPrivateData), m_PrivateConn);
 	m_PrivateReader->start(mask);
 }
 
