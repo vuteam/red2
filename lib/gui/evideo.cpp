@@ -35,7 +35,7 @@ eVideoWidget::eVideoWidget(eWidget *parent)
 	if (!fullsizeTimer)
 	{
 		fullsizeTimer = eTimer::create(eApp);
-		fullsizeTimer->timeout.connect(slot(setFullsize));
+		fullsizeTimer->timeout.connect(sigc::ptr_fun(setFullsize));
 	}
 	parent->setPositionNotifyChild(1);
 //	setBackgroundColor(gRGB(0xFF000000));
